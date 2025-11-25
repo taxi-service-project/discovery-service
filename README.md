@@ -3,9 +3,9 @@
 > **모든 마이크로서비스의 인스턴스 상태를 관리하고 검색(Service Discovery)하는 레지스트리 서버입니다.**
 
 ## 🛠 Tech Stack
-| Category | Technology            |
-| :--- |:----------------------|
-| **Language** | **Java 17**           |
+| Category | Technology |
+| :--- | :--- |
+| **Language** | **Java 17** |
 | **Framework** | Netflix Eureka Server |
 
 ## 🚀 Key Features
