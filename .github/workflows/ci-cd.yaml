@@ -80,8 +80,8 @@ jobs:
           mask-password: 'true'
       - name: docker build & push
         run: |
-          docker build -f Dockerfile --tag ${{ secrets.REGISTRY }}/${{ vars.USER_REPOSITORY }}:${{ github.sha }} .
-          docker push ${{ secrets.REGISTRY }}/${{ vars.USER_REPOSITORY }}:${{ github.sha }}
+          docker build -f Dockerfile --tag ${{ secrets.REGISTRY }}/${{ vars.DISCOVERY_REPOSITORY }}:${{ github.sha }} .
+          docker push ${{ secrets.REGISTRY }}/${{ vars.DISCOVERY_REPOSITORY }}:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -117,13 +117,13 @@ jobs:
       - name: deploy
         id: status
         run: |
-          helm upgrade --install user-service ./helm/user-service \
-          --create-namespace --namespace user \
+          helm upgrade --install discovery-service ./helm/discovery-service \
+          --create-namespace --namespace discovery \
           --set image.tag=${{ github.sha }} \
-          --set image.repository=${{ secrets.REGISTRY }}/${{ vars.USER_REPOSITORY }} \
-          --set spring.datasource.url=${{ secrets.SPRING_USER_DATASOURCE_URL }} \
-          --set spring.datasource.username=${{ secrets.SPRING_USER_DATASOURCE_USERNAME }} \
-          --set spring.datasource.password=${{ secrets.SPRING_USER_DATASOURCE_PASSWORD }} \
+          --set image.repository=${{ secrets.REGISTRY }}/${{ vars.DISCOVERY_REPOSITORY }} \
+          --set spring.datasource.url=${{ secrets.SPRING_DISCOVERY_DATASOURCE_URL }} \
+          --set spring.datasource.username=${{ secrets.SPRING_DISCOVERY_DATASOURCE_USERNAME }} \
+          --set spring.datasource.password=${{ secrets.SPRING_DISCOVERY_DATASOURCE_PASSWORD }} \
           --set spring.zipkin.endpoint=${{ vars.SPRING_ZIPKIN_ENDPOINT }} \
           --set spring.eureka.url=${{ vars.SPRING_EUREKA_URL }}
 
@@ -133,13 +133,13 @@ jobs:
         with:
           payload: |
             {
-              "text": "User Service Deploy",
+              "text": "DISCOVERYr Service Deploy",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "User Service Deploy Result: ${{ steps.status.outcome }}\nEnvironment: ${{ matrix.environment }}"
+                    "text": "DISCOVERY Service Deploy Result: ${{ steps.status.outcome }}\nEnvironment: ${{ matrix.environment }}"
                   }
                 }
               ]
@@ -167,4 +167,4 @@ jobs:
           git push origin release/${{ github.run_id }}
       - name: create pr
         run: |
-          gh pr create --base main --head release/${{ github.run_id }} --title "release/${{ github.run_id }} -> main" --body "User Service Release PR"
+          gh pr create --base main --head release/${{ github.run_id }} --title "release/${{ github.run_id }} -> main" --body "DISCOVERY Service Release PR"
